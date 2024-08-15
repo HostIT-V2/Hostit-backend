@@ -43,8 +43,6 @@ exports.markAttendance = async (req, res) => {
         // mark users attendance for that day
         let response = await Attendance.create({email: email, isPresent: true});
 
-        if (!response) throw Error("Attendance not marked");
-
         return res.status(200).json({message: 'success', data: response});
         
     } catch (error) {
