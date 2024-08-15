@@ -3,7 +3,7 @@ const Attendance = require('../models/attendance');
 
 exports.getAttendeeDetails = async (req, res) => {
 
-    const {email} = req.body
+    const {email} = req.params
 
     try {
         const attendee = await fetch('https://web3lagosbackend.onrender.com/api/general-registrations/');
