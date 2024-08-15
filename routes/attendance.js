@@ -3,6 +3,8 @@ const router = require('express').Router(),
 
 router.route('/:email')
     .get(controller.getAttendeeDetails)
-    .post()
+
+router.route('/')
+    .post(controller.markAttendance)
 
 module.exports = router;

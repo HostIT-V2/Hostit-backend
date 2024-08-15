@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const attendanceSchema = new mongoose.Schema({
-    
-    attendeeId: {type: Number},
+
+    email: {type: String},
     isPresent: {type: Boolean, default: false}
 
 }, {timestamps: true})

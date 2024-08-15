@@ -30,20 +30,35 @@ exports.getAttendeeDetails = async (req, res) => {
     }
 }
 
-exports.verifyEmailAndMarkAttendance = async (req, res) => {
+exports.markAttendance = async (req, res) => {
+
+    const {email} = req.body
+
     try {
 
-        // filter by email in web3lagos con api
-
-        // return error if not user
-
-        // verify if user among top 500 in web3lagos con api
+         // verify if user among top 500 in web3lagos con api
 
         // check if user have been verified for that day in attendance schema
 
         // mark users attendance for that day
+        let response = await Attendance.create({email, isPresent: true});
+
+        if (!response) throw Error("Attendance not marked");
+
+        return res.status(200).json({message: 'success', data: response});
         
     } catch (error) {
         return res.status(400).json({message: 'failed to verify', error: error.message})
+    }
+}
+
+exports.getAttendanceByEmail = async (req, res) => {
+
+    const {email} = req.params
+
+    try {
+        
+    } catch (error) {
+        return res.status(400).json({message: 'failed to get Attendance', error: error.message})
     }
 }
