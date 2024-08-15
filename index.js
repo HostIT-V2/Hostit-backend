@@ -2,7 +2,8 @@ require('dotenv').config();
 const express = require("express"),
     app = express(),
     cors = require('cors'),
-    attendanceRoute = require('./routes/attendance');
+    attendanceRoute = require('./routes/attendance'),
+    models = require('./models')
     
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
