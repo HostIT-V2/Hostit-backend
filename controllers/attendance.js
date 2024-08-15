@@ -41,7 +41,7 @@ exports.markAttendance = async (req, res) => {
         // check if user have been verified for that day in attendance schema
 
         // mark users attendance for that day
-        let response = await Attendance.create({email, isPresent: true});
+        let response = await Attendance.create({email: email, isPresent: true});
 
         if (!response) throw Error("Attendance not marked");
 
