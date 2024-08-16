@@ -50,11 +50,26 @@ exports.markAttendance = async (req, res) => {
     }
 }
 
+exports.getAllAttendance = async (req, res) => {
+    try {
+        let response = await Attendance.find({});
+
+        return res.status(200).json({message: "success", data: response})
+        
+    } catch (error) {
+        return res.status(400).json({message: 'failed to get all Attendance', error: error.message})
+    }
+}
+
 exports.getAttendanceByEmail = async (req, res) => {
 
     const {email} = req.params
 
     try {
+
+        let response = await Attendance.findOne({email})
+
+        return res.status(200).json({message: 'success', data: response})
         
     } catch (error) {
         return res.status(400).json({message: 'failed to get Attendance', error: error.message})
