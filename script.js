@@ -4,6 +4,8 @@ const nodemailer = require('nodemailer'),
     path = require('path'),
     hbs = require('nodemailer-express-handlebars'),
     QRcode = require('qrcode');
+const Attendance = require('./models/attendance');
+const VerifiedUser = require('./models/user');
 
 
 const generateAndSendTicket = async (email) => {
@@ -75,4 +77,39 @@ const sendEmail = async (email, subject, template, context) => {
     })
 }
 
-generateAndSendTicket("manoahluka@gmail.com");
+const generateAllAddr = async () => {
+    const attendees = await fetch('https://web3lagosbackend.onrender.com/api/general-registrations/');
+
+    let attendeeRes = await attendees.json();
+
+    const allAddress = [];
+
+    const test = ['sogobanwo@gmail.com',
+    'goodnesskolapo@gmail.com',
+    'atokemmy@gmail.com',
+    'daveproxy80@gmail.com']
+
+    test.forEach( async (attendee) => {
+        const response = await fetch(process.env.DYNAMIC_URL, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${process.env.DYNAMIC_TOKEN}`,
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({identifier: attendee, type:"email", chain :"EVM", socialProvider:"emailOnly"})
+        })
+
+        const data = await response.json()
+
+        await VerifiedUser.create({email: attendee, address: data.user.walletPublicKey})
+
+        console.log(data.user.walletPublicKey)
+    })
+
+    console.log(allAddress)
+
+}
+
+// generateAndSendTicket("manoahluka@gmail.com");
+
+generateAllAddr()
