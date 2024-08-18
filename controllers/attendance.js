@@ -43,7 +43,7 @@ exports.getAttendeeDetails = async (req, res) => {
 
 exports.verifyAttendance = async (req, res) => {
 
-    let {email, address, day} = req.body;
+    let {email, day, address} = req.body;
 
     try {
 
@@ -62,10 +62,10 @@ exports.verifyAttendance = async (req, res) => {
 
         let foundUser = await User.findOne({email})
 
-        let balanceOf = await nftContract.balanceOf(address)
+        // let balanceOf = await nftContract.balanceOf(address)
 
-        console.log(balanceOf)
-        
+        // console.log(balanceOf)
+
         // if att count = 0 (user has never marked att)
         if(address == '') {
             
@@ -104,7 +104,7 @@ exports.verifyAttendance = async (req, res) => {
             }  
 
         } else {
-            const transaction = await eventContract.w3lc2024__markAttendance(foundUser.address, day);
+            const transaction = await eventContract.w3lc2024__markAttendance(address, day);
 
             const reciept = await transaction.wait();
 
@@ -170,6 +170,18 @@ exports.markAttendance = async (req, res) => {
         
     } catch (error) {
         return res.status(400).json({message: 'failed to verify', error: error.message})
+    }
+}
+
+exports.distributePOAP = async () => {
+    try {
+
+        let allAttendance = await Attendance.find({});
+
+        return res.status(200).json({message: "success", data: allAttendance})
+        
+    } catch (error) {
+        return res.status(400).json({message: 'failed to distribute POAP', error: error.message})
     }
 }
 
