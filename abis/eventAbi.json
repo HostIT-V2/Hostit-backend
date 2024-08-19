@@ -1,180 +1,180 @@
 [
-    {
-      "inputs": [
         {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
+            "type": "function",
+            "name": "setW3LC2024NFT",
+            "inputs": [
+                {
+                    "name": "_w3lc2024nft",
+                    "type": "address",
+                    "internalType": "address"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
         },
         {
-          "internalType": "bytes32",
-          "name": "neededRole",
-          "type": "bytes32"
-        }
-      ],
-      "name": "AccessControlUnauthorizedAccount",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "W3LC2024__AlreadyAttended",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "W3LC2024__AttendeeDoesNotHaveATicket",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "W3LC2024__DayNotActive",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "W3LC2024__InvalidDay",
-      "type": "error"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "attendee",
-          "type": "address"
+            "type": "function",
+            "name": "w3lc2024__isDayActive",
+            "inputs": [
+                {
+                    "name": "day",
+                    "type": "uint8",
+                    "internalType": "enum LibApp.W3LC2024AttendanceDay"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bool",
+                    "internalType": "bool"
+                }
+            ],
+            "stateMutability": "view"
         },
         {
-          "indexed": true,
-          "internalType": "enum LibApp.W3LC2024AttendanceDay",
-          "name": "day",
-          "type": "uint8"
-        }
-      ],
-      "name": "AttendedW3LC2024",
-      "type": "event"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_w3lc2024nft",
-          "type": "address"
-        }
-      ],
-      "name": "setW3LC2024NFT",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "enum LibApp.W3LC2024AttendanceDay",
-          "name": "day",
-          "type": "uint8"
-        }
-      ],
-      "name": "w3lc2024__isDayActive",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "attendee",
-          "type": "address"
+            "type": "function",
+            "name": "w3lc2024__markAttendance",
+            "inputs": [
+                {
+                    "name": "attendee",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "day",
+                    "type": "uint8",
+                    "internalType": "enum LibApp.W3LC2024AttendanceDay"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
         },
         {
-          "internalType": "enum LibApp.W3LC2024AttendanceDay",
-          "name": "day",
-          "type": "uint8"
-        }
-      ],
-      "name": "w3lc2024__markAttendance",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "w3lc2024__returnAttendance",
-      "outputs": [
-        {
-          "internalType": "address[]",
-          "name": "day1",
-          "type": "address[]"
+            "type": "function",
+            "name": "w3lc2024__returnAttendance",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "day1",
+                    "type": "address[]",
+                    "internalType": "address[]"
+                },
+                {
+                    "name": "day2",
+                    "type": "address[]",
+                    "internalType": "address[]"
+                },
+                {
+                    "name": "day3",
+                    "type": "address[]",
+                    "internalType": "address[]"
+                }
+            ],
+            "stateMutability": "view"
         },
         {
-          "internalType": "address[]",
-          "name": "day2",
-          "type": "address[]"
+            "type": "function",
+            "name": "w3lc2024__setDayActive",
+            "inputs": [
+                {
+                    "name": "day",
+                    "type": "uint8",
+                    "internalType": "enum LibApp.W3LC2024AttendanceDay"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
         },
         {
-          "internalType": "address[]",
-          "name": "day3",
-          "type": "address[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "enum LibApp.W3LC2024AttendanceDay",
-          "name": "day",
-          "type": "uint8"
-        }
-      ],
-      "name": "w3lc2024__setDayActive",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "enum LibApp.W3LC2024AttendanceDay",
-          "name": "day",
-          "type": "uint8"
-        }
-      ],
-      "name": "w3lc2024__setDayInactive",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "attendee",
-          "type": "address"
+            "type": "function",
+            "name": "w3lc2024__setDayInactive",
+            "inputs": [
+                {
+                    "name": "day",
+                    "type": "uint8",
+                    "internalType": "enum LibApp.W3LC2024AttendanceDay"
+                }
+            ],
+            "outputs": [],
+            "stateMutability": "nonpayable"
         },
         {
-          "internalType": "enum LibApp.W3LC2024AttendanceDay",
-          "name": "day",
-          "type": "uint8"
-        }
-      ],
-      "name": "w3lc2024__verifyAttendance",
-      "outputs": [
+            "type": "function",
+            "name": "w3lc2024__verifyAttendance",
+            "inputs": [
+                {
+                    "name": "attendee",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "day",
+                    "type": "uint8",
+                    "internalType": "enum LibApp.W3LC2024AttendanceDay"
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bool",
+                    "internalType": "bool"
+                }
+            ],
+            "stateMutability": "view"
+        },
         {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
+            "type": "event",
+            "name": "AttendedW3LC2024",
+            "inputs": [
+                {
+                    "name": "attendee",
+                    "type": "address",
+                    "indexed": true,
+                    "internalType": "address"
+                },
+                {
+                    "name": "day",
+                    "type": "uint8",
+                    "indexed": true,
+                    "internalType": "enum LibApp.W3LC2024AttendanceDay"
+                }
+            ],
+            "anonymous": false
+        },
+        {
+            "type": "error",
+            "name": "AccessControlUnauthorizedAccount",
+            "inputs": [
+                {
+                    "name": "account",
+                    "type": "address",
+                    "internalType": "address"
+                },
+                {
+                    "name": "neededRole",
+                    "type": "bytes32",
+                    "internalType": "bytes32"
+                }
+            ]
+        },
+        {
+            "type": "error",
+            "name": "W3LC2024__AlreadyAttended",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "W3LC2024__DayNotActive",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "W3LC2024__InvalidDay",
+            "inputs": []
+        },
+        {
+            "type": "error",
+            "name": "W3LC2024__UnableToMint",
+            "inputs": []
         }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    }
-  ]
+    ]

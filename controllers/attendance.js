@@ -4,6 +4,7 @@ const Attendance = require('../models/attendance'),
     eventAbi = require('../abis/eventAbi.json'),
     nftAbi = require('../abis/nftAbi.json'),
     fs = require('fs');
+const VerifiedUser = require('../models/user');
 const User = require('../models/user');
 
 
@@ -43,7 +44,7 @@ exports.getAttendeeDetails = async (req, res) => {
 
 exports.verifyAttendance = async (req, res) => {
 
-    let {email, day, address} = req.body;
+    let {email, day} = req.body;
 
     try {
 
@@ -58,17 +59,12 @@ exports.verifyAttendance = async (req, res) => {
 
 
         // get attendance count
-        let foundAtt = await Attendance.find({email})
+        let foundAtt = await Attendance.findOne({email})
 
-        let foundUser = await User.findOne({email})
+        let foundUser = await VerifiedUser.findOne({email})
 
-        // let balanceOf = await nftContract.balanceOf(address)
-
-        // console.log(balanceOf)
-
-        // if att count = 0 (user has never marked att)
-        if(address == '') {
-            
+       
+        if(!foundUser) {
             // generate a wallet address
             const response = await fetch(process.env.DYNAMIC_URL, {
                 method: 'POST',
@@ -82,14 +78,14 @@ exports.verifyAttendance = async (req, res) => {
             let data = await response.json();
             
             // save to User db
-            await User.create({email: email, address: data.user.walletPublicKey})
+            await VerifiedUser.create({email: email, address: data.user.walletPublicKey})
 
             // mint single nft to user
-            const mintTx = await nftContract.mintSingle(data.user.walletPublicKey)
+            // const mintTx = await nftContract.mintSingle(data.user.walletPublicKey)
 
-            const mintReciept = await mintTx.wait();
+            // const mintReciept = await mintTx.wait();
             
-            if(mintReciept.status) {
+            // if(mintReciept.status) {
                 
                 // mark attendance 
                 const markAttTx = await eventContract.w3lc2024__markAttendance(data.user.walletPublicKey, day)
@@ -101,10 +97,11 @@ exports.verifyAttendance = async (req, res) => {
 
                 // return success and saved data
                 return res.status(201).json({message: 'successful', data: markAtt})
-            }  
+            // }  
 
         } else {
-            const transaction = await eventContract.w3lc2024__markAttendance(address, day);
+
+            const transaction = await eventContract.w3lc2024__markAttendance(foundUser.address, day);
 
             const reciept = await transaction.wait();
 
