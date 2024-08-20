@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const attendanceSchema = new mongoose.Schema({
 
     email: {type: String},
-    isPresent: {type: Boolean}
+    isPresent: {type: Boolean},
+    day: {type: Number}
 
 }, {timestamps: true})
 
