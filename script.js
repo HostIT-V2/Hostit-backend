@@ -11,26 +11,30 @@ const VerifiedUser = require('./models/user');
 const generateAndSendTicket = async (email) => {
 
     // generating an address
-    const response = await fetch(process.env.DYNAMIC_URL, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${process.env.DYNAMIC_TOKEN}`,
-            'content-type': 'application/json'
-        },
-        body: JSON.stringify({identifier: email, type:"email", chain :"EVM", socialProvider:"emailOnly"})
-    })
+    // const response = await fetch(process.env.DYNAMIC_URL, {
+    //     method: 'POST',
+    //     headers: {
+    //         'Authorization': `Bearer ${process.env.DYNAMIC_TOKEN}`,
+    //         'content-type': 'application/json'
+    //     },
+    //     body: JSON.stringify({identifier: email, type:"email", chain :"EVM", socialProvider:"emailOnly"})
+    // })
 
-    console.log(response)
+    // console.log(response)
 
-    let data = await response.json();
+    // let data = await response.json();
 
     // generate a qr with eail and password
-    const url = `https://hostit.events/${email}/${data.user.walletPublicKey}`
+    const url = `https://hostit.events/${email}/`
+
+    // /${data.user.walletPublicKey}
 
     console.log(url)
    
     // converting url to qr image
-    const image = await QRcode.toDataURL(JSON.stringify({email: email, address: data.user.walletPublicKey}));
+    const image = await QRcode.toDataURL(JSON.stringify({email: email}));
+
+    // , address: data.user.walletPublicKey
 
     console.log(image)
 
@@ -110,6 +114,6 @@ const generateAllAddr = async () => {
 
 }
 
-// generateAndSendTicket("manoahluka@gmail.com");
+generateAndSendTicket("manoahluka@gmail.com");
 
-generateAllAddr()
+// generateAllAddr()

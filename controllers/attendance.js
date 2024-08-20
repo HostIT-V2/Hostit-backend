@@ -57,10 +57,6 @@ exports.verifyAttendance = async (req, res) => {
 
         const nftContract = new ethers.Contract(process.env.TICKET_CONTRACT_ADDRESS, nftAbi, wallet);
 
-
-        // get attendance count
-        let foundAtt = await Attendance.findOne({email})
-
         let foundUser = await VerifiedUser.findOne({email})
 
        
@@ -79,25 +75,17 @@ exports.verifyAttendance = async (req, res) => {
             
             // save to User db
             await VerifiedUser.create({email: email, address: data.user.walletPublicKey})
-
-            // mint single nft to user
-            // const mintTx = await nftContract.mintSingle(data.user.walletPublicKey)
-
-            // const mintReciept = await mintTx.wait();
-            
-            // if(mintReciept.status) {
                 
-                // mark attendance 
-                const markAttTx = await eventContract.w3lc2024__markAttendance(data.user.walletPublicKey, day)
+            // mark attendance 
+            const markAttTx = await eventContract.w3lc2024__markAttendance(data.user.walletPublicKey, day)
 
-                await markAttTx.wait()
+            await markAttTx.wait()
 
-                // add to attendance collection
-                const markAtt = await Attendance.create({email: email, isPresent: true})
+            // add to attendance collection
+            const markAtt = await Attendance.create({email: email, isPresent: true, day: day})
 
-                // return success and saved data
-                return res.status(201).json({message: 'successful', data: markAtt})
-            // }  
+            // return success and saved data
+            return res.status(201).json({message: 'successful', data: markAtt})
 
         } else {
 
@@ -106,7 +94,7 @@ exports.verifyAttendance = async (req, res) => {
             const reciept = await transaction.wait();
 
             // mark users attendance for that day
-            let response = await Attendance.create({email: email, isPresent: true});
+            let response = await Attendance.create({email: email, isPresent: true, day: day});
 
             return res.status(200).json({message: 'success', data: response});
 
