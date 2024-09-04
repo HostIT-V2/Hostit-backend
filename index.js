@@ -3,6 +3,7 @@ const express = require("express"),
     app = express(),
     cors = require('cors'),
     attendanceRoute = require('./routes/attendance'),
+    verfiedusersRoute = require('./routes/user'),
     models = require('./models')
     
 app.use(express.urlencoded({extended: true}))
@@ -16,6 +17,7 @@ app.use((req, res, next) => {
 })
 
 app.use('/api/attendance', attendanceRoute);
+app.use('/api/verified-user', verfiedusersRoute);
 
 app.listen(process.env.PORT, () => {
     console.log("HostIT backend running on:", process.env.PORT);
