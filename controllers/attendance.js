@@ -210,6 +210,16 @@ exports.markAttendance = async (req, res) => {
     }
 }
 
+exports.sendTickets = async (req, res) => {
+    try {
+
+        
+        
+    } catch (error) {
+        return res.status(400).json({message: 'failed to send emails', error: error.message})
+    }
+}
+
 exports.distributePOAP = async (req, res) => {
     try {
 
