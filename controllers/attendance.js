@@ -6,6 +6,7 @@ const Attendance = require('../models/attendance'),
     fs = require('fs');
 const VerifiedUser = require('../models/user');
 const User = require('../models/user');
+const { sendEmail } = require('../script');
 
 
 const provider = new ethers.JsonRpcProvider(process.env.LISK_SEPOLIA_URL);
@@ -16,7 +17,6 @@ const encryptedKey = fs.readFileSync("./.encryptKey.json", "utf8");
 exports.getAttendeeDetails = async (req, res) => {
 
     const {email} = req.params
-
     try {
         const attendee = await fetch('https://web3lagosbackend.onrender.com/api/general-registrations/');
         const speaker = await fetch('https://web3lagosbackend.onrender.com/api/speaker-registrations/');
@@ -93,6 +93,8 @@ exports.verifyAttendance = async (req, res) => {
 
             const reciept = await transaction.wait();
 
+            if(!reciept.status) throw Error("Attendance not marked on contract");
+
             // mark users attendance for that day
             let response = await Attendance.create({email: email, isPresent: true, day: day});
 
@@ -105,6 +107,56 @@ exports.verifyAttendance = async (req, res) => {
     }
 }
 
+exports.verifyAttendanceOffchain = async (req, res) => {
+
+    let {email, day} = req.body;
+
+    try {
+
+        let foundUser = await VerifiedUser.findOne({email})
+
+        let foundAtt = await Attendance.findOne({email: email, day: day})
+       
+        if(!foundUser) {
+            // generate a wallet address
+            const response = await fetch(process.env.DYNAMIC_URL, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${process.env.DYNAMIC_TOKEN}`,
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({identifier: email, type:"email", chain :"EVM", socialProvider:"emailOnly"})
+            })
+
+            let data = await response.json();
+            
+            // save to User db
+            await VerifiedUser.create({email: email, address: data.user.walletPublicKey})
+
+            // add to attendance collection
+            const markAtt = await Attendance.create({email: email, isPresent: true, day: day})
+
+            // return success and saved data
+            return res.status(201).json({message: 'successful', data: markAtt})
+
+        } else if(foundUser && foundAtt) {
+            throw Error('Already verified');
+        }
+        else {
+
+            // mark users attendance for that day
+            let response = await Attendance.create({email: email, isPresent: true, day: day});
+
+            return res.status(200).json({message: 'success', data: response});
+
+        }
+
+    } catch (error) {
+        return res.status(400).json({message: 'failed to verify', error: error.message})
+    }
+}
+
+// not in use
 exports.markAttendance = async (req, res) => {
 
     const {email} = req.body
@@ -158,12 +210,27 @@ exports.markAttendance = async (req, res) => {
     }
 }
 
-exports.distributePOAP = async () => {
+exports.sendTickets = async (req, res) => {
     try {
 
-        let allAttendance = await Attendance.find({});
+        
+        
+    } catch (error) {
+        return res.status(400).json({message: 'failed to send emails', error: error.message})
+    }
+}
 
-        return res.status(200).json({message: "success", data: allAttendance})
+exports.distributePOAP = async (req, res) => {
+    try {
+
+        let users = await VerifiedUser.find({})
+
+        for (const user of users) {
+            await VerifiedUser.sendEmail(user.email, "WEB3 lagos conf. 2024 POAP", "poap")
+            console.log('done')
+        }
+
+        return res.status(200).json({message: "success", data: users})
         
     } catch (error) {
         return res.status(400).json({message: 'failed to distribute POAP', error: error.message})
