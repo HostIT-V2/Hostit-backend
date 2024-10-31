@@ -4,5 +4,10 @@ const router = require('express').Router(),
 router.route('/')
     .get(controller.getAllVerifiedUsers);
 
+router.route('/distribute-poap')
+    .post(controller.distributePOAP)
+
+router.route('/get-emails')
+    .get(controller.getAllEmails)
 
 module.exports = router;

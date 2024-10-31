@@ -50,15 +50,15 @@ const generateAndSendTicket = async (emails) => {
     
 }
 
-const distributePOAP = async (poaps) => {
+const distributePOAP = async (emails, poaps) => {
 
-    const emails = await fetch('http://localhost:5500/api/attendance/verfiedusers')
+    // const emails = await fetch('http://localhost:5500/api/attendance/verfiedusers')
 
-    let data = await emails.json()
+    // let data = await emails.json()
 
-    let att = data.data.slice(12, 60)
+    // let att = data.data.slice(12, 60)
 
-     att.forEach((email, index) => {
+     emails.forEach((email, index) => {
         let context = {poap: poaps[index]}
         sendEmail(email.email, "WEB3LAGOS CON POAP", 'poap', context)
 
@@ -145,47 +145,8 @@ const generateAllAddr = async () => {
 
 }
 
-// generateAndSendTicket(['iteoluwakisibello@gmail.com',
-// 'Dahformulah@gmail.com',
-// 'adzerwilfred007@gmail.com ',
-// 'iteoluwakisibello@gmail.com',
-// 'itodosimonitodo1@gmail.com',
-// 'michojekunle1@gmail.com',
-// 'layintondeveloper@gmail.com ',
-// 'kushimoayobami012@gmail.com',
-// 'ejeziefranklin@gmail.com ',
-// 'kamsiyochukwu1@gmail.com',
-// 'musahabeeblai@gmail.com',
-// 'samsonaderonmu2021@gmail.com ',
-// 'obisimon86@gmail.com',
-// 'livinalt@gmail.com',
-// 'peternnadi1999@gmail.com',
-// 'oyeniyifortunate@gmail.com',
-// 'properumunna@gmail.com',
-// 'michaelolamilekanjohn.1@gmail.com',
-// 'similoluwaeyitayoabidoye@gmail.com',
-// 'favourabangwu@gmail.com',
-// 'olawalesegun0@gmail.com',
-// 'akanimoime2016@gmail.com',
-// 'smartdevs17@gmail.com',
-// 'Michael.Esenwa@gmail.com',
-// 'udodinho200@gmail.com',
-// 'Shaleyeanu@gmail.com',
-// 'Godsgeneralmartins@gmail.com ',
-// 'angellamulikatete@gmail.com',
-// 'levifrancis15@gmail.com',
-// 'nomolos2019@gmail.com',
-// 'davidchiagoziem079@gmail.com',
-// 'shegspear@gmail.com ',
-// 'Kingakande@gmail.com ',
-// 'Oluchicharity10@gmail.com',
-// 'samuelaleonomoh5@gmail.com',
-// 'collinsadi@auraroom.xyz',
-// 'akandeozavize@gmail.com',
-// 'abolareroheemah@gmail.com',
-// 'vikibikey@gmail.com',
-// 'ukokjnr@gmail.com',
-// 'akinolaakinrimisi@gmail.com'
+// generateAndSendTicket([
+//     ''
 // ]);
 
 // distributePOAP(['http://POAP.xyz/mint/kz4egv',
@@ -238,6 +199,6 @@ const generateAllAddr = async () => {
 // 'http://POAP.xyz/mint/l00oq6',
 // 'http://POAP.xyz/mint/5i1111'])
 
-// distributePOAP("manoahluka@gmail.com", "http://POAP.xyz/mint/kz4egv")
+// distributePOAP(["manoahluka@gmail.com", "sogobanwo@gmail.com", "atokemmy@gmail.com, daveproxy80@gmail.com"], ["http://POAP.xyz/mint/nedw76", "http://POAP.xyz/mint/mgmj77", "http://POAP.xyz/mint/jksk4l", "http://POAP.xyz/mint/p8ifz4"])
 
 // generateAllAddr()

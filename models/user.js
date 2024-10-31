@@ -4,9 +4,11 @@ nodemailer = require('nodemailer'),
 fs = require('fs'),
 path = require('path'),
 hbs = require('nodemailer-express-handlebars');
+const { type } = require('os');
 
 const userSchema = new mongoose.Schema({
 
+    event: {type: String},
     email: {type: String},
     address: {type: String}
 
@@ -20,11 +22,11 @@ userSchema.statics.sendEmail = async (email, subject, template, context) => {
             partialsDir: path.resolve('../emails/'),
             defaultLayout: false,
         },
-        viewPath: path.resolve('../emails/'),
+        viewPath: path.resolve('../hostit-backend/emails/'),
     };
 
     let transport = nodemailer.createTransport({
-        host: 'smtp.zoho.com',
+        host: 'smtp.mailgun.org',
         secure: true,
         port: 465,
         auth: {

@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<body
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/mobilelogo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body
     style="
       width: 100%;
       display: flex;
       justify-content: center;
+      align-items: center;
       min-height: 100vh;
       margin: 0;
       padding: 0;
     "
   >
     <div
-      style="
-        width: 600px;
-        display: flex;
-        flex-direction: column;
-        @media (max-width: 600px) {
-            width: 100%;
-        }
-      "
+      style="width: 600px;"
+      class="container"
     >
       <div
         style="
@@ -29,25 +29,50 @@
           background-position: bottom center;
         "
       ></div>
-      <div style="padding: 20px; height: 50vh;">
-      <p style="color:#555; font-size:16px;">
-        Thank you for attending <strong>Web3Lagos Conference</strong>! Your poap is attached below to be minted on mainnet.
+      <div style="padding: 10px 20px;">
+      <h2>Hey there 👋🏻,</h2>
+      <p>
+        Hope you're still buzzing from the amazing connections and insights at
+        Web3Lagos 3.0? We're excited to offer you a unique
+        <strong>Proof of Attendance Protocol (POAP) badge</strong> 🎉.
       </p>
+
+      <h4>Grab Your POAP Now!</h4>
+      <p>Click this magic link to mint your exclusive POAP: <a href={{poap}} target="_blank">Click here</a> 👈🏻</p>
+
+      <h4>Let's Stay Connected!</h4> 
+      <p>
+        Follow us on X for behind-the-scenes peeks, community updates, and first
+        dibs on future events:
+        <a href="https://x.com/hostit_events" target="_blank">Follow here</a>
+      </p>
+
+      <a href="https://twitter.com/intent/tweet?text=Just%20minted%20my%20%40Web3LagosCon%203.0%20POAP%21%20%F0%9F%8E%89%0A%0AThanks%20%40hostit_events%2C%20built%20on%20%40LiskHQ%2C%20for%20seamless%20attendance%20verification%21%20%23Lisk%20%23POAP%20%23Web3LagosConference" target="_blank">
+        Tweet your POAP
+      </a>
+
+      <p>
+        Cheers to pushing the boundaries of Web3 and building a brighter future!
+      </p>
+
+      <p style="margin-bottom: 0">Blockchain blessings,</p>
+      <p style="margin: 0 0 30px; font-weight: bold">HostIT Team</p>
     </div>
-        <p>
-            Congratulations on attending Web3Lagos 3.0! 🎉<br/>
-            As a reminder, don't forget to mint your Proof of Attendance Protocol (POAP) using this link: {{poap}}
-            This will serve as a unique digital souvenir, verifying your participation in this groundbreaking event.
-            Best regards!
-        </p>
-        
-      <div style="background-color: #0D0042; opacity: 90%; padding: 20px 0; width: 100%; color: white; text-align: center;">
-        <h3 style=" margin-bottom:20px; font-weight: 900;">Event Details</h3>
-        <p style="font-size:16px; margin:0; ">5 - 7, September 2024 
-        </p>
-        <p style="margin:0;">The Zone Tech Park, Gbagada, Lagos Nigeria.</p>
-        <p style="font-size:16px; margin:20px 0;">Powered by: <img src="https://res.cloudinary.com/dy7el0ucd/image/upload/v1724033537/HostIT-LOGO-LIGHT_pvqpbi.png" alt="" style="width: 80px;">
-        </p>
+      <div
+        style="
+          background-color: #0d0042;
+          opacity: 90%;
+          padding: 20px 0;
+          width: 100%;
+          color: white;
+          text-align: center;
+        "
+      >
+        <img
+          src="https://res.cloudinary.com/dy7el0ucd/image/upload/v1724033537/HostIT-LOGO-LIGHT_pvqpbi.png"
+          alt=""
+          style="width: 80px"
+        />
       </div>
     </div>
   </body>
