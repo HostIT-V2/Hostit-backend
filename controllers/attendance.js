@@ -3,10 +3,13 @@ const Attendance = require('../models/attendance'),
     ethers = require('ethers'),
     eventAbi = require('../abis/eventAbi.json'),
     nftAbi = require('../abis/nftAbi.json'),
-    fs = require('fs');
+    borderlessAbi = require('../abis/borderlessEventAbi.json'),
+    fs = require('fs'),
+    QRcode = require('qrcode');
 const VerifiedUser = require('../models/user');
 const User = require('../models/user');
 const { sendEmail } = require('../script');
+
 
 
 const provider = new ethers.JsonRpcProvider(process.env.LISK_SEPOLIA_URL);
@@ -213,10 +216,68 @@ exports.markAttendance = async (req, res) => {
 exports.sendTickets = async (req, res) => {
     try {
 
-        
+        let response = await fetch('https://web3lagosbackend.onrender.com/api/general-registrations/');
+
+        let users = await response.json()
+
+        // let users = [{email: 'sogobanwo@gmail.com'}, {email: "daveproxy80@gmail.com"}, {email: "manoahluka@gmail.com"}]
+
+        for (const user of users) {
+            const img1 = await QRcode.toBuffer(JSON.stringify({email: user.email}))
+            await VerifiedUser.sendEmail(user.email, "WEB3 lagos conf. 2024 Ticket", "tickets", img1)
+            console.log('done')
+        }
+
+        console.log('done')
         
     } catch (error) {
         return res.status(400).json({message: 'failed to send emails', error: error.message})
+    }
+}
+
+exports.sendBulkEmails = async (req, res) => {
+    try {
+        // Fetch users from your API or database
+        const response = await fetch('https://web3lagosbackend.onrender.com/api/general-registrations/');
+        const users = await response.json();  
+
+        const batchSize = 40;
+        let index = 0;
+
+        const sendBatch = () => {
+
+            if (index >= users.length) {
+                console.log('All emails sent.');
+                return;
+            }
+    
+            // Get the next batch of emails to send
+            const batch = users.slice(index, index + batchSize);
+            index += batchSize;
+    
+            // Send the batch of emails
+            batch.forEach(async (user) => {
+                try {
+                    const img1 = await QRcode.toBuffer(JSON.stringify({email: user.email}))
+                    await VerifiedUser.sendEmail(user.email, "WEB3 lagos conf. 2024 Ticket", "tickets", img1)
+                    console.log(`Email sent to ${user.email}`);
+                } catch (error) {
+                    console.error(`Failed to send email to ${user.email}:`, error.message);
+                }
+            });
+        };
+    
+        // Send 40 emails every minute
+        const interval = setInterval(() => {
+            sendBatch();
+    
+            if (index >= users.length) {
+                clearInterval(interval);  // Stop the interval when all emails are sent
+            }
+        }, 60 * 1000); 
+
+    } catch (error) {
+        return res.status(400).json({message: 'failed to send emails', error: error.message});
     }
 }
 
@@ -279,5 +340,71 @@ exports.getAttendanceByEmail = async (req, res) => {
         
     } catch (error) {
         return res.status(400).json({message: 'failed to get Attendance', error: error.message})
+    }
+}
+
+
+// custom verifications
+
+exports.verifyAttendanceBorderless = async (req, res) => {
+
+    let {email, day} = req.body;
+
+    try {
+
+        let wallet = await ethers.Wallet.fromEncryptedJson(encryptedKey, process.env.PRIVATE_KEY_PASSWORD);
+
+        wallet = wallet.connect(provider);
+
+        // get smart contract instance with ethers
+        const eventContract = new ethers.Contract(process.env.LISK_CONTRACT_ADDRESS, borderlessAbi, wallet);
+
+        let foundUser = await VerifiedUser.findOne({event: 'borderless', email: email})
+
+       
+        if(!foundUser) {
+            // generate a wallet address
+            const response = await fetch(process.env.DYNAMIC_URL, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${process.env.DYNAMIC_TOKEN}`,
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({identifier: email, type:"email", chain :"EVM", socialProvider:"emailOnly"})
+            })
+
+            let data = await response.json();
+            
+            // save to User db
+            await VerifiedUser.create({event: 'borderless', email: email, address: data.user.walletPublicKey})
+                
+            // mark attendance 
+            const markAttTx = await eventContract.bdrls2024__markAttendance(data.user.walletPublicKey, day)
+
+            await markAttTx.wait()
+
+            // add to attendance collection
+            const markAtt = await Attendance.create({event: 'borderless', email: email, isPresent: true, day: day})
+
+            // return success and saved data
+            return res.status(201).json({message: 'successful', data: markAtt})
+
+        } else {
+
+            const transaction = await eventContract.bdrls2024__markAttendance(foundUser.address, day);
+
+            const reciept = await transaction.wait();
+
+            if(!reciept.status) throw Error("Attendance not marked on contract");
+
+            // mark users attendance for that day
+            let response = await Attendance.create({event: 'borderless', email: email, isPresent: true, day: day});
+
+            return res.status(200).json({message: 'success', data: response});
+
+        }
+
+    } catch (error) {
+        return res.status(400).json({message: 'failed to verify', error: error.message})
     }
 }
