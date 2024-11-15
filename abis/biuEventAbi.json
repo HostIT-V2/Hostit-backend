@@ -1,0 +1,86 @@
+[
+    {
+      "type": "function",
+      "name": "biuc2024__markAttendance",
+      "inputs": [
+        { "name": "attendee", "type": "address", "internalType": "address" },
+        {
+          "name": "day",
+          "type": "uint8",
+          "internalType": "enum Types.AttendanceDay"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "biuc2024__returnAttendance",
+      "inputs": [],
+      "outputs": [
+        { "name": "", "type": "address[]", "internalType": "address[]" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "biuc2024__verifyAttendance",
+      "inputs": [
+        { "name": "attendee", "type": "address", "internalType": "address" },
+        {
+          "name": "day",
+          "type": "uint8",
+          "internalType": "enum Types.AttendanceDay"
+        }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "setBIUC2024NFT",
+      "inputs": [
+        { "name": "_biuc2024nft", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "AttendedBIUC2024",
+      "inputs": [
+        {
+          "name": "attendee",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "day",
+          "type": "uint8",
+          "indexed": true,
+          "internalType": "enum Types.AttendanceDay"
+        },
+        {
+          "name": "time",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "AccessControlUnauthorizedAccount",
+      "inputs": [
+        { "name": "account", "type": "address", "internalType": "address" },
+        { "name": "neededRole", "type": "bytes32", "internalType": "bytes32" }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "BIUC2024__AlreadyAttended",
+      "inputs": [{ "name": "", "type": "uint8", "internalType": "uint8" }]
+    }
+  ]

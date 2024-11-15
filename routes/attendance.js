@@ -14,6 +14,9 @@ router.route('/verify-offchain')
 router.route('/verify-anambara')
     .post(controller.verifyAttendanceAnambaraTechies)
 
+router.route('/verify-biu')
+    .post(controller.verifyAttendanceBiu)
+
 router.route('/verify-borderless')
     .post(controller.verifyAttendanceBorderless)
 
