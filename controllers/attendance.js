@@ -6,6 +6,7 @@ const Attendance = require('../models/attendance'),
     borderlessAbi = require('../abis/borderlessEventAbi.json'),
     anambaraAbi = require('../abis/anabaraEventAbi.json'),
     biuAbi = require('../abis/biuEventAbi.json'),
+    itcAbi = require('../abis/itcEventAbi.json'),
     fs = require('fs'),
     QRcode = require('qrcode');
 const VerifiedUser = require('../models/user');
@@ -531,6 +532,69 @@ exports.verifyAttendanceBiu = async (req, res) => {
 
             // mark users attendance for that day
             let response = await Attendance.create({event: 'biu', email: email, isPresent: true, day: day});
+
+            return res.status(200).json({message: 'success', data: response});
+
+        }
+
+    } catch (error) {
+        return res.status(400).json({message: 'failed to verify', error: error.message})
+    }
+}
+
+exports.verifyAttendanceItc = async (req, res) => {
+
+    let {email, day} = req.body;
+
+    try {
+
+        let wallet = await ethers.Wallet.fromEncryptedJson(encryptedKey, process.env.PRIVATE_KEY_PASSWORD);
+
+        wallet = wallet.connect(provider);
+
+        // get smart contract instance with ethers
+        const eventContract = new ethers.Contract(process.env.LISK_CONTRACT_ADDRESS, itcAbi, wallet);
+
+        let foundUser = await VerifiedUser.findOne({event: 'itc', email: email})
+
+       
+        if(!foundUser) {
+            // generate a wallet address
+            const response = await fetch(process.env.DYNAMIC_URL, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${process.env.DYNAMIC_TOKEN}`,
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({identifier: email, type:"email", chain :"EVM", socialProvider:"emailOnly"})
+            })
+
+            let data = await response.json();
+            
+            // save to User db
+            await VerifiedUser.create({event: 'itc', email: email, address: data.user.walletPublicKey})
+                
+            // mark attendance 
+            const markAttTx = await eventContract.itc2024__markAttendance(data.user.walletPublicKey, day)
+
+            await markAttTx.wait()
+
+            // add to attendance collection
+            const markAtt = await Attendance.create({event: 'itc', email: email, isPresent: true, day: day})
+
+            // return success and saved data
+            return res.status(201).json({message: 'successful', data: markAtt})
+
+        } else {
+
+            const transaction = await eventContract.itc2024__markAttendance(foundUser.address, day);
+
+            const reciept = await transaction.wait();
+
+            if(!reciept.status) throw Error("Attendance not marked on contract");
+
+            // mark users attendance for that day
+            let response = await Attendance.create({event: 'itc', email: email, isPresent: true, day: day});
 
             return res.status(200).json({message: 'success', data: response});
 
