@@ -20,6 +20,9 @@ router.route('/verify-biu')
 router.route('/verify-borderless')
     .post(controller.verifyAttendanceBorderless)
 
+router.route('/verify-itc')
+    .post(controller.verifyAttendanceItc)
+
 router.route('/send-tickets')
     .post(controller.sendBulkEmails)
 
